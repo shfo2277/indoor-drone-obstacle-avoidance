@@ -13,15 +13,34 @@ PX4 SITL ─/fmu/out/vehicle_odometry──────────────�
 canny_edge_detector ─/hole_info (창문 탐지)────────────────────────────────────────▶  ───┘
 ```
 
-| 패키지 | 역할 |
-|---|---|
-| `src/planning` | 경로계획 + 비행 상태머신 (`planning_node`) |
-| `src/planning/include/planning/rrt_star.hpp` | ROS 의존성 없는 RRT\* 코어 (노드와 오프라인 벤치마크가 같은 코드 사용) |
-| `src/cannyedge_test1` | Canny 기반 사각형(창문) 탐지, 창틀 depth로 거리 실측 |
-| `src/cannyedge_test1_interfaces` | `HoleInfo.msg` |
-| `src/bridge_imu_ws` | PX4 IMU → `sensor_msgs/Imu` 변환 |
-| `src/px4_msgs` | PX4 메시지 정의 (PX4 프로젝트, BSD-3) |
-| `bench_rrtstar_20261017` | 실험 도구(자동 반복 실험, ulog 분석, 오프라인 벤치마크)와 결과 요약 |
+## 프로젝트 구조
+
+```
+├── src/
+│   ├── planning/                         # 경로계획 + 비행 제어 (planning_node)
+│   │   ├── src/planning.cpp              #   ROS 노드: 점유 격자 생성, 재계획, 경로 추종, 미션 상태머신
+│   │   └── include/planning/rrt_star.hpp #   RRT* 코어 + path shortcut (ROS 의존성 없음)
+│   ├── cannyedge_test1/                  # 비전: 창문(사각형) 탐지
+│   │   └── cannyedge_test1/canny_edge_detector.py  # Canny 에지 → 사각형 검출 → /hole_info 발행
+│   ├── cannyedge_test1_interfaces/       # 메시지 정의
+│   │   └── msg/HoleInfo.msg              #   창문 중심, 크기, 통과 가능 여부
+│   ├── bridge_imu_ws/src/bridge_imu/     # PX4 IMU → sensor_msgs/Imu 변환 (RTAB-Map 입력용)
+│   │   └── bridge_imu/imu_bridge.py
+│   └── px4_msgs/                         # PX4 ROS 2 메시지 정의 (PX4 프로젝트, BSD-3)
+└── bench_rrtstar_20261017/               # 실험 도구와 결과
+    ├── run_trial.sh                      #   시뮬레이션 1회 자동 실행 (기동 → 미션 → 정리 → 지표 저장)
+    ├── analyze_flight.py                 #   PX4 비행 기록(ulog)에서 미션 시간·착륙 오차·장애물 여유·기울기 추출
+    ├── avoid_phase.py                    #   장애물 회피 구간만 평가 (충돌 판정 포함)
+    ├── aggregate.py                      #   여러 회차 통계 (평균, p95, 성공률 신뢰구간)
+    ├── extra_metrics.py                  #   비행 속도, 시각 오도메트리 상실 횟수
+    ├── wall_cross.py                     #   창문 벽 통과 위치·기울기
+    ├── record_grid.py                    #   비행 중 장애물 격자(/planning_map) 녹화
+    ├── bench.cpp                         #   녹화한 격자에서 RRT 알고리즘 오프라인 비교 (시드 고정)
+    ├── layout_check.py                   #   장애물 배치 검증 (A* 최단 경로, 통로 폭)
+    ├── smartfactory_slalom*.world        #   추가 장애물 맵 (Gazebo)
+    ├── summary_*.txt, res_*.csv          #   실험 결과 요약
+    └── trials/                           #   회차별 결과 (result.txt, 장애물 격자)
+```
 
 RTAB-Map(`ws_rtabmap`), 포인트클라우드 필터(`voxel_mapper`), 실행용 launch(`launch_pkg`)는 별도 워크스페이스입니다.
 
@@ -54,7 +73,7 @@ ros2 run planning planning_node
 
 ## 결과 요약 (PX4 SITL, `smartfactory.world`)
 
-| 지표 | 기존 RRT (팀 원본) | 개선 RRT\* (1단계) | + shortcut + lookahead (2단계) |
+| 지표 | 기존 RRT | 개선 RRT\* (1단계) | + shortcut + lookahead (2단계) |
 |---|---|---|---|
 | 계획 경로 길이 (오프라인 100회) | 6.66 ± 0.82 m | 5.17 ± 0.08 m (-22.4%) | 5.22 ± 0.04 m |
 | 경로 꺾임 (오프라인 100회) | 31.6 rad | 2.8 rad | 0.7 rad |
@@ -70,7 +89,3 @@ ros2 run planning planning_node
 - 시뮬레이션에서는 PX4가 가상 GPS로 위치를 추정합니다. 실제 GPS 없는 환경에서는 RTAB-Map 시각 오도메트리를 PX4 EKF에 넣어야 합니다.
 - 벽에 가깝거나 빠르게 비행할 때 RTAB-Map 시각 오도메트리가 끊길 수 있고(RGB·depth 프레임 시간차), 이 동안 지도가 갱신되지 않습니다.
 - 시뮬레이션 창문 개구부(약 0.46 m)가 드론 폭(0.42 m)에 비해 좁아 창문 통과는 여유가 작습니다.
-
-## Credits
-
-졸업 프로젝트 드론 1팀 코드([MusiMusi-Shark/drone_1team](https://github.com/MusiMusi-Shark/drone_1team))를 바탕으로 경로계획·실험 체계를 개선했습니다.
