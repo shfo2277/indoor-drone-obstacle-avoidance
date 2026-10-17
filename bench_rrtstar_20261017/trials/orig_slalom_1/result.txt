@@ -1,0 +1,15 @@
+RESULT orig_slalom_1 TIMEOUT
+first_path_m=5.00
+avoid_dist_m=
+avoid_time_s=
+plans=2 adopted=3 ignored=1 failed=0
+plan_ms=0 2 
+path_lengths=5.70 6.46 
+failsafe_lines=3
+landing_detected=0
+t_arm=1792246517.599865188 t_alt=1792246529.977313849 t_avoid= t_detect= t_align= t_pass= t_land=
+detect=
+align=
+flight mission_s=239.4 disarmed=NO dist_m=55.76 land_err_m=4.541 land_x=0.55 land_y=0.91 min_clear_m=-0.210 min_clear_obj=pillar_A max_tilt_deg=105.9
+avoid reached=NO avoid_s=229.3 avoid_dist_m=54.57 avoid_clear_m=-0.316 avoid_tilt_deg=105.9 collision=YES
+ulog=/home/rth/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-10-17/14_15_07.ulg

@@ -1,0 +1,15 @@
+RESULT hybrid_wide_2 MISSION_DONE
+first_path_m=5.57
+avoid_dist_m=5.60
+avoid_time_s=15.10
+plans=9 adopted=6 ignored=0 failed=0
+plan_ms=202 208 217 203 203 201 201 200 200 
+path_lengths=5.63 5.44 4.88 4.34 3.90 2.81 2.42 1.10 0.40 
+failsafe_lines=0
+landing_detected=1
+t_arm=1792249140.782029316 t_alt=1792249152.641633555 t_avoid=1792249168.481672610 t_detect=1792249200.981584425 t_align=1792249262.381213910 t_pass=1792249292.581009694 t_land=1792249295.280982755
+detect=Detection Process End
+align=정렬 완료!
+flight mission_s=161.4 disarmed=YES dist_m=22.14 land_err_m=2.551 land_x=5.78 land_y=-2.43 min_clear_m=-0.210 min_clear_obj=wall max_tilt_deg=6.5
+avoid reached=YES avoid_s=17.0 avoid_dist_m=6.26 avoid_clear_m=0.114 avoid_tilt_deg=3.9 collision=NO
+ulog=/home/rth/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-10-17/14_58_51.ulg

@@ -19,24 +19,33 @@ cleanup() {
 }
 
 cd ~
-setsid ros2 launch launch_pkg all_launch.py > "$OUT/sim.log" 2>&1 &
+setsid ${LAUNCH_CMD:-ros2 launch launch_pkg all_launch.py} > "$OUT/sim.log" 2>&1 &
 SIM=$!
 for i in $(seq 1 180); do grep -aq 'Ready for takeoff' "$OUT/sim.log" && break; sleep 1; done
 if ! grep -aq 'Ready for takeoff' "$OUT/sim.log"; then echo "RESULT $1_$2 SIM_NOT_READY" | tee "$OUT/result.txt"; cleanup; exit 1; fi
 sleep 3
 
 source ~/drone_1team/install/setup.bash
-if [ "$3" = "record" ]; then
+if true; then  # 장애물 맵 항상 녹화 (막혔을 때 원인 확인용)
   python3 $B/record_grid.py "$OUT" > "$OUT/recorder.log" 2>&1 &
   REC=$!
 fi
-RCUTILS_LOGGING_BUFFERED_STREAM=0 setsid stdbuf -oL ros2 run planning planning_node $PLAN_ARGS > "$OUT/planning.log" 2>&1 &
+# PLAN_EXE: 다른 planning 실행 파일로 비교할 때 (예: 처음 코드)
+if [ -n "$PLAN_EXE" ]; then
+  RCUTILS_LOGGING_BUFFERED_STREAM=0 setsid stdbuf -oL $PLAN_EXE $PLAN_ARGS > "$OUT/planning.log" 2>&1 &
+else
+  RCUTILS_LOGGING_BUFFERED_STREAM=0 setsid stdbuf -oL ros2 run planning planning_node $PLAN_ARGS > "$OUT/planning.log" 2>&1 &
+fi
 PLAN=$!
 
 STATUS=TIMEOUT
-DEADLINE=$((SECONDS + 600))
+DEADLINE=$((SECONDS + ${TRIAL_DEADLINE:-600}))
 while [ $SECONDS -lt $DEADLINE ]; do
-  if grep -aq '장애물 회피 완료' "$OUT/planning.log"; then STATUS=AVOID_DONE; fi
+  if grep -aq '장애물 회피 완료' "$OUT/planning.log"; then
+    STATUS=AVOID_DONE
+    # STOP_AFTER_AVOID: 회피 구간만 비교할 때 회피 완료 5초 뒤 종료
+    if [ -n "$STOP_AFTER_AVOID" ]; then sleep 5; break; fi
+  fi
   if grep -aq 'Landing command sent' "$OUT/planning.log"; then STATUS=MISSION_DONE; break; fi
   if grep -aqE 'Segmentation|core dumped|terminate called|Aborted' "$OUT/planning.log"; then STATUS=CRASH; break; fi
   sleep 1
@@ -68,4 +77,5 @@ cleanup
 # PX4 비행 기록에서 벽 통과 위치/기울기 확인
 ULG=$(ls -t ~/PX4-Autopilot/build/px4_sitl_default/rootfs/log/*/*.ulg | head -1)
 (cd $B && python3 analyze_flight.py "$ULG" 2>/dev/null | grep -v Warn) | tee -a "$OUT/result.txt"
+(cd $B && python3 avoid_phase.py "$ULG" 2>/dev/null | grep -v Warn) | tee -a "$OUT/result.txt"
 echo "ulog=$ULG" >> "$OUT/result.txt"

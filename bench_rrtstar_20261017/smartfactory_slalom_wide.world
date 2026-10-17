@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- A ground plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://asphalt_plane</uri>
+    </include>
+     <!-- <include>
+      <uri>model://smartfactory</uri>
+      <pose>0 0 0.1 0 0 0</pose>
+    </include> -->
+
+    <include>
+      <uri>model://floor</uri>
+      <pose>15 0 0.05 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://holewall</uri>
+      <pose>0 0 0.06 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://testwall</uri>
+      <pose>8 -5 0.06 0 0 0</pose>
+    </include>
+     <include>
+      <uri>model://pillar</uri>
+      <name>pillar_1</name>
+      <pose>1 0 0.06 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://pillar</uri>
+      <name>pillar_2</name>
+      <pose>1 -4 0.06 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://pillar</uri>
+      <name>pillar_3</name>
+      <pose>2 -2 0.06 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://pillar</uri>
+      <name>pillar_4</name>
+      <pose>4 -1 0.06 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://pillar</uri>
+      <name>pillar_5</name>
+      <pose>4 -4 0.06 0 0 0</pose>
+    </include>
+    <physics name='default_physics' default='0' type='ode'>
+      <gravity>0 0 -9.8066</gravity>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>10</iters>
+          <sor>1.3</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+      <magnetic_field>6.0e-6 2.3e-5 -4.2e-5</magnetic_field>
+    </physics>
+    <!-- 넓힌 슬라럼 (2026-10-17): 함정 틈(0.42~1.25 m) 없음, 첫 벽까지 1.7 m, 최단 경로 직선의 1.33배 -->
+    <!-- slalom_wall_1: planning map 좌표 (1.70, -1.00) = world (1.70, -3.05), 크기 0.2 x 2.6 x 2.0 m -->
+    <model name="slalom_wall_1">
+      <static>true</static>
+      <pose>1.7 -3.05 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.2 2.6 2.0</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 2.6 2.0</size></box></geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Bricks</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <!-- slalom_wall_2: planning map 좌표 (3.60, 1.00) = world (3.60, -1.05), 크기 0.2 x 2.6 x 2.0 m -->
+    <model name="slalom_wall_2">
+      <static>true</static>
+      <pose>3.6 -1.05 1.0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.2 2.6 2.0</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.2 2.6 2.0</size></box></geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Bricks</name>
+            </script>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

@@ -21,6 +21,9 @@ OBSTACLES = {
     'pillar_C': (3.70, 4.05, 0.85, 1.30),
     'wall': (5.80, 6.00, -1.90, 2.05),
 }
+if os.environ.get('PX4_SITL_WORLD') == 'smartfactory_slalom_wide':
+    OBSTACLES['slalom_wall_1'] = (1.60, 1.80, -2.30, 0.30)
+    OBSTACLES['slalom_wall_2'] = (3.50, 3.70, -0.30, 2.30)
 if os.environ.get('PX4_SITL_WORLD') == 'smartfactory_slalom':
     # smartfactory_slalom.world에 추가한 벽 (실제 형상, map 좌표)
     OBSTACLES['slalom_wall_1'] = (0.90, 1.10, -1.75, 0.55)

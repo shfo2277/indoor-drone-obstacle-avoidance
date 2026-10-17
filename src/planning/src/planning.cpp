@@ -167,6 +167,11 @@ private:
   bool pending_path_ready_ = false;
   bool path_blocked_ = false;  // 남은 경로가 새로 보인 장애물에 막혀 재계획을 기다리는 중
   float hold_x_ = 0.0f, hold_y_ = 0.0f;  // 막혔을 때 정지할 위치 (NED)
+  std::vector<std::pair<float, float>> breadcrumbs_;  // 지나온 위치 (NED, 0.2 m 간격)
+  bool retreating_ = false;
+  int retreat_count_ = 0;
+  float retreat_dist_ = 0.6f;  // RTAB-Map이 맵을 갱신하는 이동 거리(0.5 m)보다 크게
+  int max_retreats_ = 5;
   //occupancy 장애물 표시 시각화
   rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr marker_pub_;
   rclcpp::Publisher<nav_msgs::msg::OccupancyGrid>::SharedPtr occupancy_pub_;  
@@ -369,6 +374,9 @@ private:
       if (current_case_ != 0) return;
       if (new_path.empty()) {
           RCLCPP_WARN(this->get_logger(), "⚠️ 경로 생성 실패. 기존 경로 유지");
+          // 막혀서 정지한 상태에서 길도 못 찾으면, 멈춰 있는 동안 RTAB-Map이 맵을 갱신하지 않아
+          // 영원히 갇히므로(교착) 지나온 길로 물러나 맵을 새로 받은 뒤 다시 계획
+          if (path_blocked_) start_retreat();
           return;
       }
 
@@ -395,6 +403,8 @@ private:
           planned_path_ = std::move(new_path);
           waypoint_idx_ = start_idx;
           path_blocked_ = false;
+          retreating_ = false;
+          retreat_count_ = 0;
           RCLCPP_INFO(this->get_logger(), "🔄 막힌 경로 교체 (%.2fm)", new_path_length);
           publish_path_marker(planned_path_);
           publish_waypoints_marker(planned_path_);
@@ -549,7 +559,17 @@ private:
     // 경로가 아직 없거나(첫 맵 대기/계산 중) 기존 경로가 막혀 재계획 중이면 현재 위치에서 호버링
     if (path_blocked_) {
       publish_trajectory_setpoint(hold_x_, hold_y_, -1.0f, current_yaw);
+      if (retreating_ && std::hypot(current_position_[0] - hold_x_, current_position_[1] - hold_y_) < 0.1f) {
+        retreating_ = false;
+        RCLCPP_INFO(this->get_logger(), "후진 완료 → 재계획");
+        request_replan();
+      }
       return;
+    }
+    // 지나온 경로 기록 (0.2 m 간격, NED)
+    if (breadcrumbs_.empty() ||
+        std::hypot(current_position_[0] - breadcrumbs_.back().first, current_position_[1] - breadcrumbs_.back().second) > 0.2f) {
+      breadcrumbs_.emplace_back(current_position_[0], current_position_[1]);
     }
     if (planned_path_.empty() || waypoint_idx_ >= planned_path_.size()) {
       publish_trajectory_setpoint(current_position_[0], current_position_[1], -1.0f, current_yaw);
@@ -853,6 +873,28 @@ private:
         }
 
         schedule_replan();
+    }
+
+    // 지나온 경로(빵부스러기)를 따라 retreat_dist_만큼 뒤의 점을 정지 목표로 설정
+    void start_retreat() {
+        if (retreat_count_ >= max_retreats_) {
+            RCLCPP_ERROR(this->get_logger(), "후진 %d회 후에도 경로 없음 → 제자리 정지 유지", retreat_count_);
+            return;
+        }
+        float back = 0.0f;
+        float px = current_position_[0], py = current_position_[1];
+        while (!breadcrumbs_.empty() && back < retreat_dist_) {
+            auto [bx, by] = breadcrumbs_.back();
+            back += std::hypot(bx - px, by - py);
+            px = bx;
+            py = by;
+            breadcrumbs_.pop_back();
+        }
+        hold_x_ = px;
+        hold_y_ = py;
+        retreating_ = true;
+        retreat_count_++;
+        RCLCPP_WARN(this->get_logger(), "↩️ 갈 길이 없음 → 지나온 길로 %.2f m 후진 후 재계획 (%d회째)", back, retreat_count_);
     }
 
     bool remaining_path_blocked() {
