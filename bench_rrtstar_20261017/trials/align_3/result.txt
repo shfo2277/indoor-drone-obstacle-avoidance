@@ -1,0 +1,14 @@
+RESULT align_3 TIMEOUT
+first_path_m=
+avoid_dist_m=
+avoid_time_s=
+plans=0 adopted=0 ignored=0 failed=0
+plan_ms=
+path_lengths=
+failsafe_lines=0
+landing_detected=0
+t_arm=1792230338.474600540 t_alt= t_avoid= t_detect= t_align= t_pass= t_land=
+detect=
+align=
+wall_cross=none max_y=0.02
+ulog=/home/rth/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-10-17/09_45_30.ulg

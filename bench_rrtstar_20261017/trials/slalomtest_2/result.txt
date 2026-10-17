@@ -1,0 +1,14 @@
+RESULT slalomtest_2 MISSION_DONE
+first_path_m=5.87
+avoid_dist_m=5.30
+avoid_time_s=19.40
+plans=11 adopted=3 ignored=2 failed=3
+plan_ms=201 201 202 202 202 201 201 201 200 201 200 
+path_lengths=5.89 5.38 5.85 5.11 4.48 3.93 3.08 2.44 1.87 1.29 0.61 
+failsafe_lines=0
+landing_detected=1
+t_arm=1792243468.297041504 t_alt=1792243480.654768833 t_avoid=1792243499.498042135 t_detect= t_align= t_pass= t_land=1792243505.498396015
+detect=
+align=
+flight mission_s=44.2 disarmed=YES dist_m=8.91 land_err_m=0.199 land_x=5.07 land_y=0.19 min_clear_m=-0.210 min_clear_obj=pillar_A max_tilt_deg=16.6
+ulog=/home/rth/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-10-17/13_24_18.ulg

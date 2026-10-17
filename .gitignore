@@ -1,0 +1,16 @@
+# colcon 빌드 결과물
+build/
+install/
+log/
+src/bridge_imu_ws/build/
+src/bridge_imu_ws/install/
+src/bridge_imu_ws/log/
+# 파이썬 가상환경 / 캐시
+myenv/
+__pycache__/
+*.pyc
+# 실험 원본 로그 (용량 큼, 요약은 summary_*.txt / result.txt로 보관)
+bench_rrtstar_20261017/trials/*/sim.log
+bench_rrtstar_20261017/trials/*/planning.log
+bench_rrtstar_20261017/trials/*/recorder.log
+.vscode/

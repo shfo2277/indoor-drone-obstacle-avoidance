@@ -1,0 +1,8 @@
+RESULT baseline_1 MISSION_DONE
+first_path_m=5.96
+avoid_dist_m=6.00
+avoid_time_s=37.30
+plans=8 adopted=2 ignored=5 failed=0
+plan_ms=1 1 0 1 0 0 0 0 
+path_lengths=5.94 5.37 4.20 3.09 2.50 1.70 1.00 0.40 
+failsafe_lines=0

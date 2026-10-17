@@ -1,0 +1,14 @@
+RESULT servo_1 MISSION_DONE
+first_path_m=5.29
+avoid_dist_m=4.30
+avoid_time_s=33.20
+plans=6 adopted=0 ignored=5 failed=2
+plan_ms=202 202 204 201 201 201 
+path_lengths=5.27 4.00 2.42 1.79 1.20 0.50 
+failsafe_lines=0
+landing_detected=1
+t_arm=1792235317.449277167 t_alt=1792235330.728277149 t_avoid=1792235367.549681026 t_detect=1792235401.150053534 t_align=1792235466.550354363 t_pass=1792235474.850489740 t_land=1792235476.850411876
+detect=Detection Process End: 창문까지 1.14 m, 크기 0.45 x 0.46 m
+align=정렬 완료! 오차 x=0.008 z=-0.010 m, 벽까지 1.16 m → 통과 목표 y=6.93
+wall_cross x=-0.947 z=-1.003 crossings=1 tilt_deg=1.6 contact=NO
+ulog=/home/rth/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-10-17/11_08_16.ulg

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>bridge_imu</name>
+  <version>0.0.0</version>
+  <description>IMU Bridge from PX4 to ROS2</description>
+  <maintainer email="your_email@example.com">Your Name</maintainer>
+  <license>MIT</license>
+
+  <!-- 빌드 도구 -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- 런타임 의존성 -->
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>px4_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+
+  <!-- 🔥 필수: 파이썬 패키지라는 걸 선언 -->
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+

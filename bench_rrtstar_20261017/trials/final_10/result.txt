@@ -1,0 +1,14 @@
+RESULT final_10 MISSION_DONE
+first_path_m=5.28
+avoid_dist_m=4.50
+avoid_time_s=37.60
+plans=7 adopted=0 ignored=6 failed=1
+plan_ms=204 211 201 201 201 200 200 
+path_lengths=5.18 5.57 3.65 2.53 2.07 1.04 0.32 
+failsafe_lines=0
+landing_detected=1
+t_arm=1792238382.398201415 t_alt=1792238394.786258352 t_avoid=1792238431.895956954 t_detect= t_align= t_pass= t_land=1792238437.895848095
+detect=
+align=
+flight mission_s=62.5 disarmed=YES dist_m=6.16 land_err_m=0.030 land_x=5.03 land_y=-0.00 min_clear_m=0.153 min_clear_obj=pillar_A max_tilt_deg=2.8
+ulog=/home/rth/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-10-17/11_59_32.ulg

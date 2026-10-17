@@ -1,0 +1,8 @@
+RESULT rrtstar_2 MISSION_DONE
+first_path_m=5.48
+avoid_dist_m=4.40
+avoid_time_s=30.70
+plans=8 adopted=1 ignored=6 failed=0
+plan_ms=208 204 205 201 200 200 200 200 
+path_lengths=5.46 4.24 3.59 2.88 2.24 1.53 0.90 0.20 
+failsafe_lines=0

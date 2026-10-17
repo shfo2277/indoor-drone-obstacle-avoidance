@@ -1,0 +1,14 @@
+RESULT align_1 MISSION_DONE
+first_path_m=5.04
+avoid_dist_m=4.00
+avoid_time_s=28.40
+plans=8 adopted=1 ignored=6 failed=0
+plan_ms=201 201 201 201 200 200 200 200 
+path_lengths=5.00 4.08 3.51 2.78 2.15 1.41 0.69 0.30 
+failsafe_lines=0
+landing_detected=1
+t_arm=1792229110.108394695 t_alt=1792229122.806779677 t_avoid=1792229150.809054616 t_detect=1792229183.608932446 t_align=1792229663.213322510 t_pass=1792229671.413386771 t_land=1792229673.413271139
+detect=Detection Process End: 창문까지 1.31 m, 크기 0.44 x 0.46 m
+align=정렬 완료! 오차 x=-0.000 z=0.009 m (측정 17회), 벽까지 1.19 m → 통과 목표 y=6.87
+wall_cross x=-0.895 z=-0.997 crossings=1 tilt_deg=1.0 contact=NO
+ulog=/home/rth/PX4-Autopilot/build/px4_sitl_default/rootfs/log/2026-10-17/09_25_02.ulg

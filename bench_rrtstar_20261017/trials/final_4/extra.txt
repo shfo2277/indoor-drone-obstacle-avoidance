@@ -1,0 +1,1 @@
+vmax_mps=0.214 vmean_mps=0.161 odom_lost_avoid=0 odom_lost_flight=0

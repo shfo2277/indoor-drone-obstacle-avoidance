@@ -1,0 +1,12 @@
+RESULT window_1 AVOID_DONE
+first_path_m=5.08
+avoid_dist_m=4.20
+avoid_time_s=28.10
+plans=8 adopted=2 ignored=5 failed=0
+plan_ms=202 204 201 200 201 200 200 200 
+path_lengths=5.07 4.25 3.63 2.90 2.24 1.54 0.81 0.30 
+failsafe_lines=0
+landing_detected=0
+t_arm=1792226057.931515984 t_alt=1792226069.834055889 t_avoid=1792226097.731503692 t_detect= t_align= t_pass= t_land=
+detect=
+align=
